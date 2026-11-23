@@ -5,9 +5,9 @@
  *   https://supabase.com/dashboard/account/tokens  ->  "Generate new token"
  *
  * Uso:
- *   SUPABASE_ACCESS_TOKEN=sbp_xxx node scripts/setup-supabase.mjs [--site-url https://...] [--region eu-central-1]
+ *   SUPABASE_ACCESS_TOKEN=sbp_xxx node scripts/setup-supabase.mjs [--site-url https://...] [--region eu-central-1] [--project-ref xxxx]
  *
- * Si el proyecto ya existe (mismo nombre en la organización) lo reutiliza.
+ * Si ya existe un proyecto (por --project-ref, por nombre, o si solo hay uno) lo reutiliza.
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { randomBytes } from 'node:crypto'
@@ -30,19 +30,18 @@ async function api(method, path, body) {
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 const log = (...a) => console.log('•', ...a)
 
-// 1. Organización
-const orgs = await api('GET', '/organizations')
-if (!orgs.length) throw new Error('No tienes organizaciones en Supabase')
-const org = orgs[0]
-log(`Organización: ${org.name} (${org.id})`)
-
-// 2. Proyecto (reutiliza si existe)
+// 1. Proyecto existente (--project-ref, o por nombre, o el único que haya) o nuevo
 let projects = await api('GET', '/projects')
-let project = projects.find((p) => p.name === NAME && p.organization_id === org.id)
+let project = args['project-ref'] ? projects.find((p) => p.id === args['project-ref'])
+  : projects.find((p) => p.name === NAME) ?? (projects.length === 1 ? projects[0] : null)
 let dbPass = null
 if (project) {
-  log(`Proyecto existente: ${project.id} (${project.region})`)
+  log(`Proyecto existente: ${project.name} (${project.id}, ${project.region})`)
 } else {
+  const orgs = await api('GET', '/organizations')
+  if (!orgs.length) throw new Error('No tienes organizaciones en Supabase')
+  const org = orgs[0]
+  log(`Organización: ${org.name} (${org.id})`)
   dbPass = randomBytes(24).toString('base64url')
   project = await api('POST', '/projects', { name: NAME, organization_id: org.id, db_pass: dbPass, region: REGION })
   log(`Proyecto creado: ${project.id} en ${REGION}`)
