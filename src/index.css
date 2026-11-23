@@ -48,6 +48,8 @@ h1, h2, h3, .font-display { font-family: var(--font-display); }
 .no-scrollbar { scrollbar-width: none; }
 
 .leaflet-container { background: #0b1220; font-family: var(--font-sans); }
+/* Modo oscuro para las teselas de OpenStreetMap (sin clave de API) */
+.map-tiles-dark { filter: invert(1) hue-rotate(195deg) saturate(0.55) brightness(0.9) contrast(0.95); }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #151f33; color: #eef2f8; box-shadow: 0 8px 30px rgb(0 0 0 / .5); }
 .leaflet-popup-content { margin: 12px 14px; }
 .leaflet-control-zoom a { background: #151f33 !important; color: #eef2f8 !important; border-color: #263350 !important; }

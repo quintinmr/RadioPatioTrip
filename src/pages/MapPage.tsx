@@ -74,7 +74,7 @@ export default function MapPage() {
   return (
     <div className="relative h-[calc(100dvh-57px-72px-env(safe-area-inset-top)-env(safe-area-inset-bottom))]">
       <MapContainer center={[center.lat, center.lng]} zoom={13} className="h-full w-full" zoomControl={false}>
-        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>' url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
+        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" className="map-tiles-dark" maxZoom={19} />
         <FlyTo target={fly} />
         {pins.map((p) => (
           <Marker key={p.id} position={[p.lat, p.lng]} icon={pinIcon(p.emoji, p.color)}>
