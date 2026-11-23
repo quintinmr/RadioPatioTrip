@@ -111,7 +111,7 @@ Antes, añade en GitHub **Settings → Secrets and variables → Actions** los s
 | Consentimiento | Checkbox obligatorio al registrarse; se guarda `consent_version` y `consent_at` en el perfil. |
 | Sin geolocalización personal | La posición del móvil solo se usa en el cliente (mapa / Google Maps). Las fotos se recomprimen en canvas, lo que elimina el EXIF (GPS incluido). |
 | Derecho de acceso y portabilidad | *Mi cuenta → Descargar mis datos* llama a `export_my_data()` y descarga un JSON. |
-| Derecho de supresión | *Mi cuenta → Borrar mi cuenta* llama a `delete_my_account()`: borra usuario, perfil, avatar, archivos subidos, valoraciones, gastos y diario; los viajes sin más miembros se eliminan enteros; si era owner, cede la propiedad. |
+| Derecho de supresión | *Mi cuenta → Borrar mi cuenta*: la app borra por la Storage API los archivos que devuelve `my_storage_paths()` (avatar, lo subido, viajes donde estás solo) y después `delete_my_account()` elimina usuario, perfil, valoraciones, gastos y diario; los viajes sin más miembros se eliminan enteros; si eras owner, cede la propiedad. Probado de extremo a extremo. |
 | Residencia de datos | Proyecto Supabase en región UE (elegido al crearlo). |
 | Terceros | Sin analítica ni trackers. Nominatim recibe el texto buscado; Open-Meteo, coordenadas de la ciudad; Frankfurter, códigos de moneda; Google Maps se abre en el dispositivo del usuario. |
 | Transparencia | Política de privacidad dentro de la app (`/privacidad`). |

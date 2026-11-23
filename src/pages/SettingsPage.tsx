@@ -51,10 +51,22 @@ export default function SettingsPage() {
     if (!confirm('¿Borrar tu cuenta? Se eliminarán tu perfil, tu foto, lo que hayas subido y tus valoraciones. Los viajes donde seas el único miembro se borrarán por completo. Esta acción no se puede deshacer.')) return
     if (prompt('Escribe BORRAR para confirmar') !== 'BORRAR') return
     setBusy('delete')
-    const { error } = await supabase.rpc('delete_my_account')
-    setBusy(null)
-    if (error) return toast.err(error.message)
-    await signOut(); nav('/login')
+    try {
+      // 1) Archivos (Supabase no permite borrarlos desde SQL): avatar, lo que subí y los viajes donde estoy solo
+      const { data: files, error: e1 } = await supabase.rpc('my_storage_paths')
+      if (e1) throw e1
+      for (const bucket of ['avatars', 'media'] as const) {
+        const paths = (files as { bucket: string; path: string }[]).filter((f) => f.bucket === bucket).map((f) => f.path)
+        for (let i = 0; i < paths.length; i += 100) {
+          const { error } = await supabase.storage.from(bucket).remove(paths.slice(i, i + 100))
+          if (error) throw error
+        }
+      }
+      // 2) Datos y cuenta
+      const { error } = await supabase.rpc('delete_my_account')
+      if (error) throw error
+      await signOut(); nav('/login')
+    } catch (e) { toast.err(errMsg(e)) } finally { setBusy(null) }
   }
 
   return (

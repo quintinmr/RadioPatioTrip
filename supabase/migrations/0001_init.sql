@@ -78,7 +78,7 @@ create table public.trips (
   home_currency text not null default 'EUR',
   timezone text not null default 'Europe/London',
   invite_code text not null unique default upper(substr(replace(gen_random_uuid()::text,'-',''),1,8)),
-  created_by uuid references auth.users(id) on delete set null,
+  created_by uuid references auth.users(id) on delete set null default auth.uid(),
   created_at timestamptz not null default now()
 );
 
@@ -301,8 +301,10 @@ create policy "profiles: update own" on public.profiles for update
   to authenticated using (id = auth.uid()) with check (id = auth.uid());
 
 -- trips
+-- El creador también puede leer: con INSERT ... RETURNING Postgres comprueba la
+-- política de SELECT antes de que el trigger lo añada como miembro.
 create policy "trips: members read" on public.trips for select
-  to authenticated using (public.is_trip_member(id));
+  to authenticated using (public.is_trip_member(id) or created_by = auth.uid());
 create policy "trips: anyone creates" on public.trips for insert
   to authenticated with check (auth.uid() is not null);
 create policy "trips: members update" on public.trips for update
@@ -402,35 +404,51 @@ returns jsonb language sql security definer set search_path = public as $$
 $$;
 
 -- ---------------------------------------------------------------------
--- GDPR: derecho de supresión. Borra la cuenta y todo lo que es personal.
--- Los contenidos compartidos (visitas, transportes...) creados por el
--- usuario se conservan anonimizados (created_by -> null) si el viaje sigue
--- teniendo miembros; lo que subió él (fotos, vídeos, docs) se elimina.
+-- GDPR: derecho de supresión.
+-- Supabase no permite borrar objetos de Storage desde SQL, así que el flujo
+-- es en dos pasos desde la app:
+--   1) my_storage_paths()  -> lista de archivos a borrar (la app los elimina
+--      con la Storage API mientras aún tiene permisos)
+--   2) delete_my_account() -> borra usuario, perfil, pertenencias y datos
+--      personales. Lo compartido (visitas, transportes...) queda anonimizado
+--      (created_by -> null) si el viaje sigue teniendo miembros; los viajes
+--      sin más miembros se eliminan por completo.
 -- ---------------------------------------------------------------------
+create or replace function public.my_storage_paths()
+returns table (bucket text, path text) language sql security definer set search_path = public as $$
+  -- mi avatar
+  select 'avatars', name from storage.objects
+    where bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text
+  union
+  -- lo que subí yo
+  select 'media', storage_path from public.media where uploader_id = auth.uid()
+  union
+  -- fotos de platos que creé yo
+  select 'media', photo_path from public.dishes where created_by = auth.uid() and photo_path is not null
+  union
+  -- todo lo de los viajes donde soy el único miembro
+  select 'media', name from storage.objects
+    where bucket_id = 'media' and ((storage.foldername(name))[1])::uuid in (
+      select t.id from public.trips t
+      where public.is_trip_member(t.id)
+        and not exists (select 1 from public.trip_members m where m.trip_id = t.id and m.user_id <> auth.uid()));
+$$;
+
 create or replace function public.delete_my_account()
 returns void language plpgsql security definer set search_path = public as $$
 declare uid uuid := auth.uid();
 begin
   if uid is null then raise exception 'No autenticado'; end if;
 
-  -- Archivos del usuario
-  delete from storage.objects where bucket_id = 'avatars' and (storage.foldername(name))[1] = uid::text;
-  delete from storage.objects where bucket_id = 'media'
-    and name in (select storage_path from public.media where uploader_id = uid);
-  delete from public.media where uploader_id = uid;
-
   -- Datos propios
+  delete from public.media where uploader_id = uid;
   delete from public.journal_entries where author_id = uid;
   delete from public.dish_ratings where user_id = uid;
   delete from public.expenses where payer_id = uid;
   update public.checklist_items set assigned_to = null where assigned_to = uid;
   update public.expenses set split_with = array_remove(split_with, uid) where uid = any(split_with);
 
-  -- Viajes donde era el único miembro -> se eliminan por completo (con sus archivos)
-  delete from storage.objects where bucket_id = 'media' and ((storage.foldername(name))[1])::uuid in (
-    select t.id from public.trips t
-    where not exists (select 1 from public.trip_members m where m.trip_id = t.id and m.user_id <> uid)
-  );
+  -- Viajes donde era el único miembro -> se eliminan por completo
   delete from public.trips t
     where not exists (select 1 from public.trip_members m where m.trip_id = t.id and m.user_id <> uid);
 
