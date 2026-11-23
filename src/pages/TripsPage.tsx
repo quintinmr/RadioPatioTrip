@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { Avatar, EmptyState, Field, PageLoader, Sheet, Spinner, errMsg, toast } from '@/components/ui'
 import { PlacePicker, type PlaceValue } from '@/components/PlacePicker'
 import { fmtDate, daysUntil } from '@/lib/format'
+import { playTripChime, tripHasChime } from '@/lib/chime'
 import type { Trip } from '@/lib/types'
 
 export default function TripsPage() {
@@ -66,7 +67,7 @@ function TripCard({ trip }: { trip: Trip }) {
   const status = ended ? 'Terminado · recuerdos' : d > 0 ? `Faltan ${d} día${d === 1 ? '' : 's'}` : '¡En marcha!'
   return (
     <li>
-      <Link to={`/viaje/${trip.id}`} className="card fade-in block overflow-hidden transition hover:border-gold/50">
+      <Link to={`/viaje/${trip.id}`} onClick={() => tripHasChime(trip) && playTripChime()} className="card fade-in block overflow-hidden transition hover:border-gold/50">
         <div className="relative h-28 bg-gradient-to-br from-sky/40 via-plum/30 to-bg-2">
           <div className="absolute inset-0 grid place-items-center text-6xl opacity-50">🏰</div>
           <span className={`chip absolute left-3 top-3 ${ended ? 'bg-bg/70 text-ink-2' : d > 0 ? 'bg-gold text-bg' : 'bg-rose text-bg'}`}>{status}</span>

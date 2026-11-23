@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ChevronLeft, Camera, Download, Trash2, LogOut, ShieldCheck } from 'lucide-react'
+import { ChevronLeft, Camera, Download, Trash2, LogOut, ShieldCheck, Music } from 'lucide-react'
+import { chimeEnabled, setChimeEnabled, playTripChime } from '@/lib/chime'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
 import { uploadToBucket } from '@/lib/storage'
@@ -16,6 +17,7 @@ export default function SettingsPage() {
   const [name, setName] = useState(profile?.display_name ?? '')
   const [busy, setBusy] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const [chime, setChime] = useState(chimeEnabled())
 
   const saveName = async () => {
     setBusy('name')
@@ -88,6 +90,14 @@ export default function SettingsPage() {
           </div>
         </div>
         <p className="mt-3 text-xs text-ink-3">Email: {user?.email} · Consentimiento v{profile?.consent_version} aceptado el {profile ? fmtDate(profile.consent_at) : ''}</p>
+      </section>
+
+      <section className="card mb-4 p-4">
+        <label className="flex items-center gap-3 text-sm">
+          <Music size={18} className="text-gold" />
+          <span className="flex-1"><span className="font-semibold">Melodía al abrir el viaje</span><br /><span className="text-xs text-ink-3">Unos compases de "The Skye Boat Song" (la de Outlander) al entrar en Edimburgo.</span></span>
+          <input type="checkbox" checked={chime} onChange={(e) => { setChime(e.target.checked); setChimeEnabled(e.target.checked); if (e.target.checked) playTripChime() }} className="h-5 w-5 accent-gold" />
+        </label>
       </section>
 
       <section className="card mb-4 divide-y divide-line">

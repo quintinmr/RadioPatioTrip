@@ -127,6 +127,11 @@ src/pages/      Auth, Trips, TripLayout, Timeline, Map, Food, Gallery, More, Exp
 android/        proyecto Capacitor (APK)
 ```
 
+## Créditos
+
+- Logo: clave de sol del tipo de letra [Noto Music](https://fonts.google.com/noto/specimen/Noto+Music) (licencia OFL).
+- Melodía al abrir el viaje: unos compases de *The Skye Boat Song* (tradicional escocesa, dominio público) sintetizados con Web Audio. Se desactiva en *Mi cuenta*.
+
 ## Scripts
 
 | Comando | Qué hace |
