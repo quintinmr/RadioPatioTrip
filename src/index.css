@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+
+  --color-bg: #0b1220;
+  --color-bg-2: #101a2d;
+  --color-card: #151f33;
+  --color-card-2: #1b2740;
+  --color-line: #263350;
+  --color-ink: #eef2f8;
+  --color-ink-2: #aab6cc;
+  --color-ink-3: #71809a;
+  --color-gold: #f5c542;
+  --color-gold-2: #ffd978;
+  --color-teal: #35c2b7;
+  --color-rose: #ff6b8a;
+  --color-sky: #5aa9ff;
+  --color-moss: #7ed38a;
+  --color-plum: #b48cff;
+}
+
+html, body, #root { height: 100%; }
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+h1, h2, h3, .font-display { font-family: var(--font-display); }
+
+.safe-top { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
+@utility card { @apply bg-card border border-line rounded-2xl; }
+@utility chip { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium; }
+@utility input { @apply w-full rounded-xl bg-bg-2 border border-line px-3 py-2.5 text-ink placeholder:text-ink-3 outline-none focus:border-gold/70 focus:ring-2 focus:ring-gold/20; }
+@utility label { @apply block text-xs font-semibold uppercase tracking-wide text-ink-3 mb-1; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none; }
+@utility btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none bg-gold text-bg hover:bg-gold-2; }
+@utility btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none bg-card-2 text-ink hover:bg-line; }
+@utility btn-danger { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none bg-rose/15 text-rose hover:bg-rose/25; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+.leaflet-container { background: #0b1220; font-family: var(--font-sans); }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #151f33; color: #eef2f8; box-shadow: 0 8px 30px rgb(0 0 0 / .5); }
+.leaflet-popup-content { margin: 12px 14px; }
+.leaflet-control-zoom a { background: #151f33 !important; color: #eef2f8 !important; border-color: #263350 !important; }
+.leaflet-bar { border-color: #263350 !important; }
+.leaflet-control-attribution { background: rgb(11 18 32 / .7) !important; color: #71809a !important; font-size: 10px; }
+.leaflet-control-attribution a { color: #aab6cc !important; }
+.marker-pin { width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: grid; place-items: center; border: 2px solid #0b1220; box-shadow: 0 4px 12px rgb(0 0 0 / .5); }
+.marker-pin > * { transform: rotate(45deg); }
+
+@keyframes pulse-dot { 0%,100% { box-shadow: 0 0 0 0 rgb(255 107 138 / .6);} 70% { box-shadow: 0 0 0 10px rgb(255 107 138 / 0);} }
+.pulse-dot { animation: pulse-dot 1.8s infinite; }
+
+.fade-in { animation: fadeIn .25s ease-out both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: none; } }
