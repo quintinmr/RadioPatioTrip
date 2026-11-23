@@ -1,10 +1,13 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { Capacitor } from '@capacitor/core'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { Field, Spinner, errMsg, toast } from '@/components/ui'
 
 export const CONSENT_VERSION = '1.0'
+/** Siempre apunta al APK de la última Release (descarga pública, sin cuenta de GitHub). */
+const APK_URL = 'https://github.com/quintinmr/RadioPatioTrip/releases/latest/download/RadioPatioTrip.apk'
 
 export default function AuthPage() {
   const { user, loading } = useAuth()
@@ -89,7 +92,15 @@ export default function AuthPage() {
             <button type="button" onClick={magic} disabled={busy} className="w-full text-center text-sm text-ink-2 underline-offset-2 hover:underline">Entrar con enlace mágico (sin contraseña)</button>
           )}
         </form>
-        <p className="mt-6 text-center text-xs text-ink-3">Datos alojados en la UE · <Link to="/privacidad" className="underline">Privacidad</Link></p>
+        {!Capacitor.isNativePlatform() && (
+          <div className="card mt-6 p-4 text-center text-sm text-ink-2">
+            <p className="font-semibold text-ink">¿Cómo instalarla?</p>
+            <p className="mt-1"><b>Android:</b> <a href={APK_URL} className="text-gold underline">descarga el APK</a> y ábrelo (acepta "instalar desde este origen").</p>
+            <p className="mt-1"><b>iPhone:</b> en Safari pulsa Compartir → "Añadir a pantalla de inicio".</p>
+            <p className="mt-1">O úsala directamente aquí en el navegador. No hace falta cuenta de GitHub.</p>
+          </div>
+        )}
+        <p className="mt-4 text-center text-xs text-ink-3">Datos alojados en la UE · <Link to="/privacidad" className="underline">Privacidad</Link></p>
       </div>
     </div>
   )
