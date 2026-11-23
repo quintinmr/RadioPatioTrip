@@ -27,7 +27,20 @@ Todo se sincroniza **en tiempo real** entre los miembros del viaje (Supabase Rea
 
 ---
 
-## 1. Crear el proyecto en Supabase (5 minutos)
+## 0. Camino rápido (todo automático)
+
+```bash
+# 1) Token en https://supabase.com/dashboard/account/tokens
+SUPABASE_ACCESS_TOKEN=sbp_xxx node scripts/setup-supabase.mjs --site-url https://quintinmr.github.io/RadioPatioTrip/
+# crea el proyecto en Frankfurt (UE), aplica la migración, configura Auth y escribe .env
+# 2) Sube las claves a GitHub Actions (APK + GitHub Pages)
+node scripts/setup-github.mjs
+```
+
+La web se publica sola en **https://quintinmr.github.io/RadioPatioTrip/** con cada push a `main`
+(workflow `pages.yml`), y el APK se genera con `build.yml`.
+
+## 1. Crear el proyecto en Supabase a mano (si no usas el script)
 
 1. Entra en <https://supabase.com> → **New project**.
    - **Region: elige una de la UE** (p. ej. *Frankfurt (eu-central-1)* o *London*). Esto es lo que mantiene los datos personales dentro de la UE.
