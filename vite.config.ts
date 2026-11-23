@@ -13,7 +13,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.png'],
+      includeAssets: ['favicon.svg', 'icons/*.png', 'og.png'],
       manifest: {
         name: 'RadioPatio Trip',
         short_name: 'RadioPatio',
@@ -33,7 +33,7 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
-        navigateFallbackDenylist: [/^\/~/],
+        navigateFallbackDenylist: [/^\/~/, /\/instalar/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/tile\.openstreetmap\.org\/.*/i,
