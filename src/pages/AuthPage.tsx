@@ -6,8 +6,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { Field, Spinner, errMsg, toast } from '@/components/ui'
 
 export const CONSENT_VERSION = '1.0'
-/** Siempre apunta al APK de la última Release (descarga pública, sin cuenta de GitHub). */
-const APK_URL = 'https://github.com/quintinmr/RadioPatioTrip/releases/latest/download/RadioPatioTrip.apk'
+/** APK servido desde la propia web (lo genera el workflow de Pages), sin pasar por github.com. */
+const APK_URL = `${import.meta.env.BASE_URL}RadioPatioTrip.apk`
 
 export default function AuthPage() {
   const { user, loading } = useAuth()
@@ -95,7 +95,7 @@ export default function AuthPage() {
         {!Capacitor.isNativePlatform() && (
           <div className="card mt-6 p-4 text-center text-sm text-ink-2">
             <p className="font-semibold text-ink">¿Cómo instalarla?</p>
-            <p className="mt-1"><b>Android:</b> <a href={APK_URL} className="text-gold underline">descarga el APK</a> y ábrelo (acepta "instalar desde este origen").</p>
+            <p className="mt-1"><b>Android:</b> <a href={APK_URL} download="RadioPatioTrip.apk" className="text-gold underline">descarga el APK</a> y ábrelo (acepta "instalar desde este origen").</p>
             <p className="mt-1"><b>iPhone:</b> en Safari pulsa Compartir → "Añadir a pantalla de inicio".</p>
             <p className="mt-1">O úsala directamente aquí en el navegador. No hace falta cuenta de GitHub.</p>
           </div>
