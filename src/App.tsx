@@ -41,7 +41,7 @@ export default function App() {
   return (
     <QueryClientProvider client={qc}>
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
           <Toaster />
           <Routes>
             <Route path="/login" element={<AuthPage />} />
