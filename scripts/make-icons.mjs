@@ -7,19 +7,20 @@ const run = (c) => execSync(c, { stdio: 'inherit' })
 const render = (svg, size, out) => run(`bash scripts/render-svg.sh ${svg} ${size} ${out}`)
 mkdirSync('public/icons', { recursive: true })
 const tmp = 'android/build/icon-tmp'; mkdirSync(tmp, { recursive: true })
-render('public/favicon.svg', 1024, `${tmp}/icon-1024.png`)
-render('scripts/logo-tiles.svg', 1024, `${tmp}/tiles-1024.png`)
+render('public/favicon.svg', 2048, `${tmp}/icon-1024.png`)
+render('scripts/logo-tiles.svg', 2048, `${tmp}/tiles-1024.png`)
 run(`convert ${tmp}/icon-1024.png -resize 192x192 public/icons/icon-192.png`)
 run(`convert ${tmp}/icon-1024.png -resize 512x512 public/icons/icon-512.png`)
 // Maskable / adaptativo: la retícula debe caber en el círculo central (66 % del lienzo), fondo pergamino
 const art = (size, out) => run(`convert -size ${size}x${size} xc:'#F3EAD7' \\( ${tmp}/tiles-1024.png -resize ${Math.round(size * 0.58)}x${Math.round(size * 0.58)} \\) -gravity center -composite ${out}`)
 art(512, 'public/icons/icon-512-maskable.png')
-for (const [dpi, s] of [['mdpi', 48], ['hdpi', 72], ['xhdpi', 96], ['xxhdpi', 144], ['xxxhdpi', 192]]) {
+// Android: icono clásico a 48 dp y capa del icono adaptativo a 108 dp (Android la recorta al 66 % central)
+for (const [dpi, s, fg] of [['mdpi', 48, 108], ['hdpi', 72, 162], ['xhdpi', 96, 216], ['xxhdpi', 144, 324], ['xxxhdpi', 192, 432]]) {
   const dir = `android/app/src/main/res/mipmap-${dpi}`
   mkdirSync(dir, { recursive: true })
   run(`convert ${tmp}/icon-1024.png -resize ${s}x${s} ${dir}/ic_launcher.png`)
   run(`cp ${dir}/ic_launcher.png ${dir}/ic_launcher_round.png`)
-  art(s, `${dir}/ic_launcher_foreground.png`)
+  art(fg, `${dir}/ic_launcher_foreground.png`)
 }
 // Banner para WhatsApp / redes: pergamino, retícula y nombre
 const font = execSync(`fc-match -f '%{file}' "DejaVu Serif:bold"`).toString().trim()
