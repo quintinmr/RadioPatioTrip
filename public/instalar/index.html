@@ -3,71 +3,75 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instala RadioPatio Trip</title>
+  <title>Instala RadioPatio</title>
   <meta name="description" content="La app de nuestro viaje a Edimburgo: plan en directo, mapa con rutas, carta, fotos y gastos. Instálala en 1 minuto." />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="RadioPatio Trip · Edimburgo" />
+  <meta property="og:title" content="RadioPatio · Edimburgo" />
   <meta property="og:description" content="La app de nuestro viaje: plan en directo, mapa con rutas, carta, fotos y gastos. Toca para instalarla (Android o iPhone)." />
   <meta property="og:image" content="https://quintinmr.github.io/RadioPatioTrip/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:url" content="https://quintinmr.github.io/RadioPatioTrip/instalar/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="theme-color" content="#0b1220" />
+  <meta name="theme-color" content="#F3EAD7" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; background: radial-gradient(120% 80% at 50% 0%, #1e3a8a 0%, #0b1220 60%); color: #eef2f8; font-family: -apple-system, "Segoe UI", Roboto, Inter, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 32px 20px 48px; }
-    .icon { width: 108px; height: 108px; border-radius: 28px; box-shadow: 0 12px 40px rgba(0,0,0,.5); }
-    h1 { font-size: 30px; margin: 18px 0 4px; text-align: center; }
-    h1 b { color: #f5c542; }
-    p.sub { color: #aab6cc; text-align: center; margin: 0 0 26px; max-width: 320px; line-height: 1.4; }
-    .card { width: 100%; max-width: 420px; background: #151f33; border: 1px solid #263350; border-radius: 20px; padding: 18px; margin-bottom: 14px; }
-    .card h2 { font-size: 17px; margin: 0 0 10px; display: flex; align-items: center; gap: 8px; }
-    .card ol { margin: 0 0 12px; padding-left: 20px; color: #aab6cc; font-size: 14px; line-height: 1.6; }
-    .btn { display: block; width: 100%; text-align: center; text-decoration: none; font-weight: 700; font-size: 17px; padding: 15px; border-radius: 14px; background: #f5c542; color: #0b1220; }
-    .btn.ghost { background: #1b2740; color: #eef2f8; }
-    .hint { font-size: 12px; color: #71809a; margin-top: 8px; text-align: center; }
-    .hide { display: none; }
-    footer { color: #71809a; font-size: 12px; margin-top: 18px; text-align: center; }
-    footer a { color: #aab6cc; }
+    body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #F8F1E3 0%, #E9DCC2 100%); color: #3B2A1E; font-family: Inter, "Segoe UI", -apple-system, Roboto, Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 36px 20px 48px; }
+    .brand { display: flex; align-items: center; gap: 14px; }
+    .brand img { width: 64px; height: 64px; border-radius: 14px; box-shadow: 0 6px 18px rgba(59,42,30,.25); }
+    .brand span { font-family: Fraunces, Georgia, serif; font-size: 36px; font-weight: 700; color: #3B2A1E; letter-spacing: -0.5px; }
+    h1 { font-family: Fraunces, Georgia, serif; font-size: 26px; font-weight: 700; margin: 26px 0 6px; text-align: center; color: #7B1E2B; }
+    p.sub { color: #6B5A48; text-align: center; margin: 0 0 28px; max-width: 340px; line-height: 1.5; font-size: 15px; }
+    .card { width: 100%; max-width: 440px; background: #FFFDF8; border: 1px solid #DCCFB4; border-radius: 12px; padding: 20px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(59,42,30,.10), inset 0 1px 0 #fff; }
+    .card h2 { font-size: 17px; font-weight: 600; margin: 0 0 10px; display: flex; align-items: center; gap: 10px; color: #3B2A1E; }
+    .dot { width: 16px; height: 16px; border-radius: 4px; display: inline-block; box-shadow: 2px 2px 0 rgba(0,0,0,.25); }
+    .card ol { margin: 0 0 14px; padding-left: 20px; color: #6B5A48; font-size: 14px; line-height: 1.65; }
+    .btn { display: block; width: 100%; text-align: center; text-decoration: none; font-weight: 600; font-size: 16px; padding: 13px; border-radius: 8px; background: linear-gradient(180deg, #B8333F, #7B1E2B); color: #fff; box-shadow: 0 3px 0 #4E1019, 0 6px 14px rgba(123,30,43,.3); }
+    .btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #4E1019; }
+    .btn.blue { background: linear-gradient(180deg, #3C6BC4, #1E3F7A); box-shadow: 0 3px 0 #122650, 0 6px 14px rgba(30,63,122,.3); }
+    .btn.gold { background: linear-gradient(180deg, #EBC25A, #C9962B); color: #3B2A1E; box-shadow: 0 3px 0 #8A6317, 0 6px 14px rgba(201,150,43,.3); }
+    .hint { font-size: 12px; color: #8A7A66; margin-top: 10px; text-align: center; }
+    footer { color: #8A7A66; font-size: 12px; margin-top: 20px; text-align: center; line-height: 1.6; }
+    footer a { color: #1E3F7A; }
   </style>
 </head>
 <body>
-  <img class="icon" src="../icons/icon-192.png" alt="" />
-  <h1>RadioPatio <b>Trip</b></h1>
-  <p class="sub">La app de nuestro viaje a Edimburgo. Sin tiendas de apps, sin cuentas raras: un minuto y lista.</p>
+  <div class="brand"><img src="../icons/icon-192.png" alt="" /><span>RadioPatio</span></div>
+  <h1>La app de nuestro viaje a Edimburgo</h1>
+  <p class="sub">Sin tiendas de apps y sin cuentas raras: un minuto y lista.</p>
 
   <section class="card" id="android">
-    <h2>🤖 Android</h2>
+    <h2><span class="dot" style="background:#2F6B3A"></span> Android</h2>
     <ol>
       <li>Toca <b>Descargar la app</b>.</li>
       <li>Abre el archivo descargado (barra de notificaciones).</li>
       <li>Si pregunta, permite <i>instalar desde este origen</i> y pulsa <b>Instalar</b>.</li>
     </ol>
-    <a class="btn" href="../RadioPatioTrip.apk" download="RadioPatioTrip.apk">⬇️ Descargar la app (APK, 5 MB)</a>
+    <a class="btn" href="../RadioPatioTrip.apk" download="RadioPatioTrip.apk">Descargar la app (APK, 5 MB)</a>
     <p class="hint">Android avisa porque no viene de Google Play. Es nuestra app, es seguro.</p>
   </section>
 
   <section class="card" id="ios">
-    <h2>🍎 iPhone / iPad</h2>
+    <h2><span class="dot" style="background:#7B1E2B"></span> iPhone / iPad</h2>
     <ol>
       <li>Abre la app en <b>Safari</b> con el botón de abajo.</li>
       <li>Pulsa el icono <b>Compartir</b> (cuadrado con flecha).</li>
       <li>Elige <b>Añadir a pantalla de inicio</b>.</li>
     </ol>
-    <a class="btn" href="../">🧭 Abrir la app en Safari</a>
+    <a class="btn blue" href="../">Abrir la app en Safari</a>
   </section>
 
   <section class="card">
-    <h2>💻 Ordenador o sin instalar</h2>
-    <a class="btn ghost" href="../">Usar en el navegador</a>
+    <h2><span class="dot" style="background:#1E3F7A"></span> Ordenador o sin instalar</h2>
+    <a class="btn gold" href="../">Usar en el navegador</a>
   </section>
 
   <footer>Después crea tu cuenta (nombre, email y contraseña) y pide el <b>código de invitación</b> del viaje en el grupo.<br /><a href="../privacidad">Privacidad</a> · Datos en la UE</footer>
 
   <script>
-    // Pone primero la sección del sistema del móvil
     var ua = navigator.userAgent || '';
     var isIOS = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (isIOS) { var a = document.getElementById('android'), i = document.getElementById('ios'); i.parentNode.insertBefore(i, a); }

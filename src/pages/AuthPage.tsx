@@ -55,7 +55,7 @@ export default function AuthPage() {
     <div className="safe-top safe-bottom flex min-h-full flex-col justify-center px-6 py-10">
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 h-20 w-20 rounded-3xl bg-gradient-to-br from-sky to-bg-2 shadow-lg shadow-sky/20 grid place-items-center text-4xl">🏴󠁧󠁢󠁳󠁣󠁴󠁿</div>
+          <img src={`${import.meta.env.BASE_URL}icons/icon-192.png`} alt="" className="mx-auto mb-4 h-20 w-20 rounded-2xl shadow-lg shadow-black/40" />
           <h1 className="text-4xl font-extrabold tracking-tight">RadioPatio <span className="text-gold">Trip</span></h1>
           <p className="mt-2 text-ink-2">Organizad el viaje. Vividlo. Guardadlo.</p>
         </div>
