@@ -16,13 +16,20 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: 21 }
       - run: npm ci
-      # APK (misma web empaquetada con Capacitor), se sirve desde la propia página
-      - run: npm run build && npx cap sync android && cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+      - name: Clave de firma
+        run: echo "$RP_KEYSTORE_BASE64" | base64 -d > $RUNNER_TEMP/release.jks
+        env: { RP_KEYSTORE_BASE64: "${{ secrets.RP_KEYSTORE_BASE64 }}" }
+      # APK firmado (misma web empaquetada con Capacitor), se sirve desde la propia página
+      - run: npm run build && npx cap sync android && cd android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon -PversionCode=${{ github.run_number }} -PversionName=1.${{ github.run_number }}
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          RP_KEYSTORE: ${{ runner.temp }}/release.jks
+          RP_KEYSTORE_PASSWORD: ${{ secrets.RP_KEYSTORE_PASSWORD }}
+          RP_KEY_ALIAS: ${{ secrets.RP_KEY_ALIAS }}
+          RP_KEY_PASSWORD: ${{ secrets.RP_KEY_PASSWORD }}
       # Web con base path de GitHub Pages + el APK al lado
-      - run: npm run build && cp dist/index.html dist/404.html && cp android/app/build/outputs/apk/debug/app-debug.apk dist/RadioPatioTrip.apk
+      - run: npm run build && cp dist/index.html dist/404.html && cp android/app/build/outputs/apk/release/app-release.apk dist/RadioPatioTrip.apk
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}

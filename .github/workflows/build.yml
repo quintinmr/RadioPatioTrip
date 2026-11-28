@@ -30,10 +30,18 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
       - name: Sync Capacitor
         run: npx cap sync android
-      - name: Build APK (debug)
-        run: cd android && chmod +x gradlew && ./gradlew assembleDebug --no-daemon
+      - name: Clave de firma
+        run: echo "$RP_KEYSTORE_BASE64" | base64 -d > $RUNNER_TEMP/release.jks
+        env: { RP_KEYSTORE_BASE64: "${{ secrets.RP_KEYSTORE_BASE64 }}" }
+      - name: Build APK (release firmado)
+        run: cd android && chmod +x gradlew && ./gradlew assembleRelease --no-daemon -PversionCode=${{ github.run_number }} -PversionName=${{ github.ref_name }}
+        env:
+          RP_KEYSTORE: ${{ runner.temp }}/release.jks
+          RP_KEYSTORE_PASSWORD: ${{ secrets.RP_KEYSTORE_PASSWORD }}
+          RP_KEY_ALIAS: ${{ secrets.RP_KEY_ALIAS }}
+          RP_KEY_PASSWORD: ${{ secrets.RP_KEY_PASSWORD }}
       - name: Rename APK
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk RadioPatioTrip.apk
+        run: cp android/app/build/outputs/apk/release/app-release.apk RadioPatioTrip.apk
       - uses: actions/upload-artifact@v4
         with: { name: RadioPatioTrip-apk, path: RadioPatioTrip.apk }
       - uses: actions/upload-artifact@v4

@@ -73,11 +73,19 @@ La forma más sencilla de que tus amigos la instalen (Android **e iPhone**) es p
 
 ## 4. APK de Android
 
+### Firma
+
+Todos los APK (CI y local) se firman con la misma clave, guardada en `~/.config/radiopatio/`
+(`radiopatio-release.jks` + `keystore.env`) y como secretos `RP_*` en GitHub Actions.
+**Haz copia de seguridad de esa carpeta**: si se pierde la clave, las actualizaciones
+dejarán de instalarse encima y habrá que desinstalar la app. `node scripts/setup-github.mjs`
+vuelve a subir los secretos.
+
 ### Local (necesitas Android Studio / SDK y Java 17+)
 
 ```bash
-npm run apk:debug
-# → android/app/build/outputs/apk/debug/app-debug.apk
+npm run apk          # release firmado → RadioPatioTrip.apk
+npm run apk:debug    # depuración, firma temporal
 ```
 
 Pásale el APK a tus amigos por WhatsApp/Drive; al instalarlo Android pedirá permitir "orígenes desconocidos".

@@ -19,3 +19,6 @@ android/capacitor-cordova-android-plugins
 *.aab
 .supabase-db-password.txt
 outlander_intro.mp3
+*.jks
+*.keystore
+keystore.env
