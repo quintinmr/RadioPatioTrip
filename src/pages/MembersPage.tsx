@@ -1,6 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Copy, Share2, LogOut, Crown, UserMinus, Trash2 } from 'lucide-react'
+import { Copy, Share2, LogOut, Crown, UserMinus, Trash2, Image } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
+import { uploadToBucket } from '@/lib/storage'
+import { compressImage } from '@/lib/images'
+import { TripCover } from '@/components/TripCover'
 import { useTrip } from '@/hooks/useTrip'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
@@ -13,6 +17,20 @@ export default function MembersPage() {
   const nav = useNavigate()
   const [busy, setBusy] = useState(false)
   const me = members.find((m) => m.user_id === user?.id)
+  const qc = useQueryClient()
+  const coverRef = useRef<HTMLInputElement>(null)
+  const changeCover = async (file: File | null) => {
+    if (!file) return
+    setBusy(true)
+    try {
+      const path = `${trip.id}/cover-${Date.now()}.jpg`
+      await uploadToBucket('media', path, await compressImage(file, 1600, 0.82), 'image/jpeg')
+      const { error } = await supabase.from('trips').update({ cover_path: path }).eq('id', trip.id)
+      if (error) throw error
+      if (trip.cover_path) await supabase.storage.from('media').remove([trip.cover_path])
+      qc.invalidateQueries({ queryKey: ['trip', trip.id] }); qc.invalidateQueries({ queryKey: ['trips'] }); toast.ok('Portada actualizada')
+    } catch (e) { toast.err(errMsg(e)) } finally { setBusy(false) }
+  }
   const isOwner = me?.role === 'owner'
   const inviteText = `¡Únete a "${trip.name}" en RadioPatio Trip! Abre la app, pulsa "Tengo un código" y escribe: ${trip.invite_code}\n${window.location.origin}`
 
@@ -46,6 +64,13 @@ export default function MembersPage() {
 
   return (
     <div className="px-4 pb-6 pt-4">
+      <div className="card mb-4 overflow-hidden">
+        <div className="relative">
+          <TripCover trip={trip} className="h-36" />
+          <button onClick={() => coverRef.current?.click()} disabled={busy} className="chip absolute bottom-2 right-2 bg-bg/80 text-ink"><Image size={12} /> Cambiar portada</button>
+          <input ref={coverRef} type="file" accept="image/*" hidden onChange={(e) => { changeCover(e.target.files?.[0] ?? null); e.target.value = '' }} />
+        </div>
+      </div>
       <div className="card mb-4 p-4 text-center">
         <p className="text-xs uppercase tracking-wide text-ink-3">Código de invitación</p>
         <p className="my-2 font-mono text-3xl font-bold tracking-[0.3em] text-gold">{trip.invite_code}</p>

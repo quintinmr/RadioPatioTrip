@@ -8,6 +8,7 @@ import { Avatar, EmptyState, Field, PageLoader, Sheet, Spinner, errMsg, toast } 
 import { PlacePicker, type PlaceValue } from '@/components/PlacePicker'
 import { fmtDate, daysUntil } from '@/lib/format'
 import { playTripChime, tripHasChime } from '@/lib/chime'
+import { TripCover } from '@/components/TripCover'
 import type { Trip } from '@/lib/types'
 
 export default function TripsPage() {
@@ -68,8 +69,8 @@ function TripCard({ trip }: { trip: Trip }) {
   return (
     <li>
       <Link to={`/viaje/${trip.id}`} onClick={() => tripHasChime(trip) && playTripChime()} className="card fade-in block overflow-hidden transition hover:border-gold/50">
-        <div className="relative h-28 bg-gradient-to-br from-sky/40 via-plum/30 to-bg-2">
-          <div className="absolute inset-0 grid place-items-center text-6xl opacity-50">🏰</div>
+        <div className="relative">
+          <TripCover trip={trip} className="h-40" />
           <span className={`chip absolute left-3 top-3 ${ended ? 'bg-bg/70 text-ink-2' : d > 0 ? 'bg-gold text-bg' : 'bg-rose text-bg'}`}>{status}</span>
         </div>
         <div className="p-4">

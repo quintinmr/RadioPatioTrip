@@ -39,12 +39,14 @@ export function weatherEmoji(code: number): string {
 
 export async function fetchRate(from: string, to: string): Promise<number | null> {
   if (from === to) return 1
+  // Frankfurter (BCE). El dominio antiguo api.frankfurter.app redirige sin cabeceras CORS.
   try {
-    const res = await fetch(`https://api.frankfurter.app/latest?from=${from}&to=${to}`)
-    if (!res.ok) return null
-    const j = await res.json()
-    return j.rates?.[to] ?? null
-  } catch {
-    return null
-  }
+    const res = await fetch(`https://api.frankfurter.dev/v1/latest?base=${from}&symbols=${to}`)
+    if (res.ok) { const j = await res.json(); if (j.rates?.[to]) return j.rates[to] }
+  } catch { /* probamos el respaldo */ }
+  try {
+    const res = await fetch(`https://open.er-api.com/v6/latest/${from}`)
+    if (res.ok) { const j = await res.json(); if (j.rates?.[to]) return j.rates[to] }
+  } catch { /* sin conexión */ }
+  return null
 }

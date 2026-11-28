@@ -51,7 +51,7 @@ function CurrencyWidget({ from, to }: { from: string; to: string }) {
         <input className="input w-24 text-right" inputMode="decimal" value={amount} onChange={(e) => setAmount(e.target.value)} />
         <span className="text-sm font-semibold">{from}</span>
         <span className="text-ink-3">=</span>
-        <span className="text-lg font-bold text-gold">{rate.data ? (n * rate.data).toFixed(2) : '…'} {to}</span>
+        <span className="text-lg font-bold text-gold">{rate.isLoading ? '…' : rate.data ? `${(n * rate.data).toFixed(2)} ${to}` : <span className="text-sm text-rose">sin cambio (¿sin conexión?)</span>}</span>
       </div>
     </div>
   )
