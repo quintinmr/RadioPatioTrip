@@ -95,7 +95,7 @@ export default function SettingsPage() {
       <section className="card mb-4 p-4">
         <label className="flex items-center gap-3 text-sm">
           <Music size={18} className="text-gold" />
-          <span className="flex-1"><span className="font-semibold">Melodía al abrir el viaje</span><br /><span className="text-xs text-ink-3">Unos compases de "The Skye Boat Song" (la de Outlander) al entrar en Edimburgo.</span></span>
+          <span className="flex-1"><span className="font-semibold">Melodía al abrir el viaje</span><br /><span className="text-xs text-ink-3">Unos segundos de la cabecera de Outlander al entrar en Edimburgo.</span></span>
           <input type="checkbox" checked={chime} onChange={(e) => { setChime(e.target.checked); setChimeEnabled(e.target.checked); if (e.target.checked) playTripChime() }} className="h-5 w-5 accent-gold" />
         </label>
       </section>

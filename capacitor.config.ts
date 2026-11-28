@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'com.radiopatio.trip',
-  appName: 'RadioPatio Trip',
+  appName: 'RadioPatio',
   webDir: 'dist',
   android: { allowMixedContent: false },
 }

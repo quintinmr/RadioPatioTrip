@@ -15,7 +15,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'icons/*.png', 'og.png'],
       manifest: {
-        name: 'RadioPatio Trip',
+        name: 'RadioPatio',
         short_name: 'RadioPatio',
         description: 'Organizador de viajes de la panda RadioPatio',
         lang: 'es',
@@ -32,7 +32,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2,mp3}'],
         navigateFallbackDenylist: [/^\/~/, /\/instalar/, /\.apk$/],
         runtimeCaching: [
           {

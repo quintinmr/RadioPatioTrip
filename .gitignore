@@ -18,3 +18,4 @@ android/capacitor-cordova-android-plugins
 *.apk
 *.aab
 .supabase-db-password.txt
+outlander_intro.mp3

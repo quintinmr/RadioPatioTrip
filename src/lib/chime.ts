@@ -26,9 +26,28 @@ const EIGHTH = 0.3 // segundos por corchea (~ tempo de la serie)
 
 let ctx: AudioContext | null = null
 
-/** Debe llamarse desde un gesto del usuario (clic) por la política de autoplay. */
-export function playTripChime(volume = 0.5) {
+let audio: HTMLAudioElement | null = null
+
+/**
+ * Debe llamarse desde un gesto del usuario (clic) por la política de autoplay.
+ * Reproduce el clip de la cabecera (public/sounds/outlander.mp3); si no está
+ * disponible, suena la melodía sintetizada.
+ */
+export function playTripChime(volume = 0.8) {
   if (!chimeEnabled()) return
+  try {
+    audio ??= new Audio(`${import.meta.env.BASE_URL}sounds/outlander.mp3`)
+    audio.volume = volume
+    audio.currentTime = 0
+    audio.play().catch(() => playSynthChime(0.5))
+  } catch { playSynthChime(0.5) }
+}
+
+export function stopTripChime() {
+  if (audio && !audio.paused) { audio.pause(); audio.currentTime = 0 }
+}
+
+export function playSynthChime(volume = 0.5) {
   try {
     const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
     if (!AC) return
